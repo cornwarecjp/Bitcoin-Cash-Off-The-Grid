@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#    botg.py
+#    bccotg.py
 #    Copyright (C) 2015-2017 by CJP
 #
 #    This file is part of Amiko Pay.
