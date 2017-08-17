@@ -162,8 +162,10 @@ the command
 
 Use the raw transaction data from step 4. The amounts should be the amounts of
 the unspent transaction outputs, in the order they were specified in step 4.
+Note: to confuse you, the amounts here should be specified in BTC/BCC, unlike
+earlier, where it should be specified in mBTC/mBCC.
 
-Check the information returned by BCCOTG.
+Check the information returned by BCCOTG, especially the amounts and addresses.
 
 Step 6: broadcast the transaction
 ---------------------------------
