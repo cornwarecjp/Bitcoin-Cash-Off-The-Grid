@@ -226,22 +226,12 @@ def decode(args):
 	print 'Tx fee: %s BCC' % str(decimal.Decimal(fee)/BCC)
 
 
-def test(args):
-	k = Key()
-	k.makeNewKey()
-	data = "Hello world"
-	sig = k.sign(data)
-	print 'signature: ', sig.encode("hex")
-	print k.verify(data, sig)
-
-
 
 funcs = \
 {
 "getinfo": getinfo,
 "decode": decode,
 "spend": spend,
-"test": test
 }
 funcNames = funcs.keys()
 funcNames.sort()
