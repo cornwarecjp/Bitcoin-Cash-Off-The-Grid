@@ -120,28 +120,24 @@ BCCOTG will ask for further information. First, the unspent transaction outputs:
 	2 <address2>
 	...
 	Address of unspent output: <choose a number from the above items>
-	Amount in unspent output (mBTC): <amount in the UTXO>
+	Amount in unspent output (BCC): <amount in the UTXO>
 
 Continue with this for all UTXOs you wish to spend, and then press Enter to stop.
 BCCOTG will then show the sum of all UTXO amounts you entered. Check this:
 
-	Total of amounts: <amount> mBTC
+	Total of amounts: <amount> BCC
 
 Next, BCCOTG asks for the destination address, and the amount to send to the
 destination address:
 
 	Destination address: <address>
-	Amount to send to destination (mBTC): <amount>
+	Amount to send to destination (BCC): <amount>
 
 BE CAREFUL: BCCOTG does NOT send any remaining funds to a change address! This
 means that any funds that are not sent to the destination address are used as
 transaction fee, and WILL BE LOST (to you)! So, the amount to send to
 destination should only be a little bit less than the total of the input
 amounts. BCCOTG DOES NOT CHECK THIS!
-
-Note that BCCOTG asks for amounts in mBTC. Since we are constructing a BCC
-transaction, it should of course say mBCC: BCCOTG doesn't know anything
-about BTC/BCC exchange rates.
 
 Finally, BCCOTG returns the raw transaction data, and the transaction ID:
 
@@ -162,8 +158,6 @@ the command
 
 Use the raw transaction data from step 4. The amounts should be the amounts of
 the unspent transaction outputs, in the order they were specified in step 4.
-Note: to confuse you, the amounts here should be specified in BTC/BCC, unlike
-earlier, where it should be specified in mBTC/mBCC.
 
 Check the information returned by BCCOTG, especially the amounts and addresses.
 

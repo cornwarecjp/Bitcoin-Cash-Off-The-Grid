@@ -37,8 +37,7 @@ import bitcointransaction as btx
 
 
 
-mBTC = 100000 #Satoshi
-BTC  = 1000 * mBTC
+BCC = 100000000 #Satoshi
 
 
 def readPrivateKey(filename):
@@ -94,22 +93,22 @@ def spend(args):
 		k = getKey("Address of unspent output: ")
 		inputs.append((txid, vout, k))
 		amounts.append(int(decimal.Decimal(
-			raw_input("Amount in unspent output (mBTC): ")
-			) * mBTC))
+			raw_input("Amount in unspent output (BCC): ")
+			) * BCC))
 
 	totalAmount = sum(amounts)
-	print "Total of amounts: %s mBTC" % str(decimal.Decimal(totalAmount)/mBTC)
+	print "Total of amounts: %s BCC" % str(decimal.Decimal(totalAmount)/BCC)
 
 	'''
-	fee = int(0.01 * mBTC)
-	print "Transaction fee is set to: %s mBTC" % str(decimal.Decimal(fee)/mBTC)
+	fee = int(0.01 * BCC)
+	print "Transaction fee is set to: %s BCC" % str(decimal.Decimal(fee)/BCC)
 	'''
 
 	destAddress = raw_input("Destination address: ")
 	destHash = base58.decodeBase58Check(destAddress, 0) #PUBKEY_ADDRESS = 0
 	destAmount = int(decimal.Decimal(
-			raw_input("Amount to send to destination (mBTC): ")
-			) * mBTC)
+			raw_input("Amount to send to destination (BCC): ")
+			) * BCC)
 	if destAmount < 0:
 		print "Negative amount is not allowed"
 		sys.exit(2)
@@ -160,7 +159,7 @@ def spend(args):
 
 def decode(args):
 	s = args[0]
-	amounts = [int(decimal.Decimal(a)*BTC) for a in args[1:]]
+	amounts = [int(decimal.Decimal(a)*BCC) for a in args[1:]]
 	serialized = binascii.unhexlify(s)
 	tx = btx.Transaction.deserialize(serialized)
 	print 'lockTime: ', tx.lockTime
