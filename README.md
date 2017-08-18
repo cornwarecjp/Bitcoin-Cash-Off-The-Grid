@@ -74,7 +74,7 @@ Step 2: check the private keys
 In a commandline window, go to the directory that contains BCCOTG, and give
 the command
 
-	./bccotg.py <file1> [<file2> [..]]
+	./bccotg.py getinfo <file1> [<file2> [..]]
 
 where the files containing the private keys are given as commandline arguments.
 It should return information like:
