@@ -142,7 +142,7 @@ Next, BCCOTG asks for the destination address:
 Next, BCCOTG reports the amount sent to the destination address, by subtracting
 the fee from the total of the input amounts:
 
-Amount sent to destination: <amount> BCC
+	Amount sent to destination: <amount> BCC
 
 Check this value.
 
@@ -155,8 +155,10 @@ Finally, BCCOTG returns the raw transaction data, and the transaction ID:
 	<raw transaction data>
 	Transaction ID: <txid>
 
-Save this information somewhere: you will use it in the next steps. Also,
-double-check the destination address and destination amount.
+Save this information somewhere: you will use it in the next steps.
+
+Now is a good time to double-check the destination address and the transaction
+fee you entered earlier.
 
 Step 5: check the transaction
 -----------------------------
