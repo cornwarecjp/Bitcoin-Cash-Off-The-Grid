@@ -169,7 +169,7 @@ def decode(args):
 		print '    amount: %s BCC' % str(decimal.Decimal(amounts[i])/BCC)
 		print '    prevOutputHash: ', tx_in.previousOutputHash.encode("hex")
 		print '    prevOutputIndex: ', tx_in.previousOutputIndex
-		print '    sequenceNumber: %08x' % tx_in.sequenceNumber
+		print '    sequenceNumber: 0x%08x' % tx_in.sequenceNumber
 		print '    script:'
 		for e in tx_in.scriptSig.elements:
 			if isinstance(e, str):
@@ -191,7 +191,7 @@ def decode(args):
 
 		print '        pubKey: ', pubKey.encode('hex')
 		print '        signature: ', signature.encode('hex')
-		print '        hashType: %0x' % hashType
+		print '        hashType: 0x%0x' % hashType
 		print '        address: ', address
 		print '        sigHash: ', sigHash.encode('hex')
 		print '        valid: ', k.verify(sigHash, signature)
@@ -200,13 +200,26 @@ def decode(args):
 	for tx_out in tx.tx_out:
 		print 'TxOut:'
 		print '    amount: %s BCC' % str(decimal.Decimal(tx_out.amount)/BCC)
+
+		elements = tx_out.scriptPubKey.elements
 		print '    script:'
-		for e in tx_out.scriptPubKey.elements:
+		for e in elements:
 			if isinstance(e, str):
 				s = e.encode("hex")
 			else:
-				s = '%0x' % e
+				s = '0x%0x' % e
 			print '        ', s
+
+		if len(elements) == 5 and \
+			elements[0:2] == [btx.OP.DUP, btx.OP.HASH160] and \
+			elements[3:5] == [btx.OP.EQUALVERIFY, btx.OP.CHECKSIG] and \
+			isinstance(elements[2], str):
+
+			address = base58.encodeBase58Check(elements[2], 0) #PUBKEY_ADDRESS = 0
+			print '    Address: ', address
+		else:
+			print '    Unrecognized script type'
+
 		print ''
 
 	fee = sum(amounts) - sum([tx_out.amount for tx_out in tx.tx_out])
