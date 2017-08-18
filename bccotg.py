@@ -99,16 +99,16 @@ def spend(args):
 	totalAmount = sum(amounts)
 	print "Total of amounts: %s BCC" % str(decimal.Decimal(totalAmount)/BCC)
 
-	'''
-	fee = int(0.01 * BCC)
-	print "Transaction fee is set to: %s BCC" % str(decimal.Decimal(fee)/BCC)
-	'''
+	fee = int(decimal.Decimal(
+			raw_input("Transaction fee (BCC): ")
+			) * BCC)
 
 	destAddress = raw_input("Destination address: ")
 	destHash = base58.decodeBase58Check(destAddress, 0) #PUBKEY_ADDRESS = 0
-	destAmount = int(decimal.Decimal(
-			raw_input("Amount to send to destination (BCC): ")
-			) * BCC)
+
+	destAmount = totalAmount - fee
+
+	print "Amount sent to destination: %s BCC" % str(decimal.Decimal(destAmount)/BCC)
 	if destAmount < 0:
 		print "Negative amount is not allowed"
 		sys.exit(2)

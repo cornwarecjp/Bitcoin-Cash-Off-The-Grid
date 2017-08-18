@@ -127,17 +127,27 @@ BCCOTG will then show the sum of all UTXO amounts you entered. Check this:
 
 	Total of amounts: <amount> BCC
 
-Next, BCCOTG asks for the destination address, and the amount to send to the
-destination address:
+Next, BCCOTG asks for the transaction fee:
+
+	Transaction fee (BCC): <fee>
+
+BE CAREFUL: BCCOTG does NOT CHECK the sanity of this value! Any funds used as
+transaction fee will be LOST (to you). You can easily lose a large part of your
+funds by choosing a too high transaction fee.
+
+Next, BCCOTG asks for the destination address:
 
 	Destination address: <address>
-	Amount to send to destination (BCC): <amount>
 
-BE CAREFUL: BCCOTG does NOT send any remaining funds to a change address! This
-means that any funds that are not sent to the destination address are used as
-transaction fee, and WILL BE LOST (to you)! So, the amount to send to
-destination should only be a little bit less than the total of the input
-amounts. BCCOTG DOES NOT CHECK THIS!
+Next, BCCOTG reports the amount sent to the destination address, by subtracting
+the fee from the total of the input amounts:
+
+Amount sent to destination: <amount> BCC
+
+Check this value.
+
+Note: BCCOTG does NOT send any funds to a change address: all input funds are
+used either for transaction fee, or sent to the destination address.
 
 Finally, BCCOTG returns the raw transaction data, and the transaction ID:
 
