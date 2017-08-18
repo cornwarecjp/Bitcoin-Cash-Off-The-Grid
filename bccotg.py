@@ -166,7 +166,7 @@ def decode(args):
 	for i in range(len(tx.tx_in)):
 		tx_in = tx.tx_in[i]
 		print 'TxIn:'
-		print '    amount: ', amounts[i]
+		print '    amount: %s BCC' % str(decimal.Decimal(amounts[i])/BCC)
 		print '    prevOutputHash: ', tx_in.previousOutputHash.encode("hex")
 		print '    prevOutputIndex: ', tx_in.previousOutputIndex
 		print '    sequenceNumber: %08x' % tx_in.sequenceNumber
@@ -199,7 +199,7 @@ def decode(args):
 
 	for tx_out in tx.tx_out:
 		print 'TxOut:'
-		print '    amount: ', tx_out.amount
+		print '    amount: %s BCC' % str(decimal.Decimal(tx_out.amount)/BCC)
 		print '    script:'
 		for e in tx_out.scriptPubKey.elements:
 			if isinstance(e, str):
@@ -209,6 +209,8 @@ def decode(args):
 			print '        ', s
 		print ''
 
+	fee = sum(amounts) - sum([tx_out.amount for tx_out in tx.tx_out])
+	print 'Tx fee: %s BCC' % str(decimal.Decimal(fee)/BCC)
 
 
 def test(args):
