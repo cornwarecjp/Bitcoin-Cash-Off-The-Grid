@@ -16,10 +16,8 @@ Please read the file "LICENSE" for licensing information.
 System requirements
 ===================
 
-A (preferrably Linux or other UNIX-like) system with Python 3.x and the OpenSSL
-library installed. BCCOTG tries to load OpenSSL from "openssl.so". If it has a
-different name on your system (e.g. "openssl.ddl" on windows), you may try to
-fix the name by editing crypto.py.
+A (preferrably Linux or other UNIX-like) system with Python 3.x and the Python
+secp256k1 library (e.g. `pip install secp256k1`).
 
 How to use
 ==========
