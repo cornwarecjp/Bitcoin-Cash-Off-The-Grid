@@ -1,5 +1,5 @@
 #    bitcointransaction.py
-#    Copyright (C) 2014-2017 by CJP
+#    Copyright (C) 2014-2025 by CJP
 #
 #    This file is part of Bitcoin Cash Off The Grid (BCCOTG).
 #
@@ -74,7 +74,7 @@ def unpackVarInt(data):
 	struct.error: unexpected end of data
 	"""
 
-	firstByte = struct.unpack('B', data[0])[0] #uint8_t
+	firstByte = data[0] #uint8_t
 	if firstByte < 0xfd:
 		value = firstByte
 		return value, 1
@@ -209,7 +209,7 @@ class Script:
 
 		elements = []
 		while len(data) > 0:
-			opcode = struct.unpack('B', data[0])[0]
+			opcode = data[0]
 			data = data[1:]
 
 			if opcode <= 0x4e:
@@ -253,7 +253,7 @@ class Script:
 		Exceptions:
 		Exception: serialization failed
 		"""
-		return ''.join([self.__serializeElement(e) for e in self.elements])
+		return b''.join([self.__serializeElement(e) for e in self.elements])
 
 
 	def __serializeElement(self, e):
@@ -261,16 +261,16 @@ class Script:
 		Serializes a single script element.
 
 		Arguments:
-		e: str or int; the to-be-serialized element.
+		e: bytes or int; the to-be-serialized element.
 
 		Return value:
-		str; the serialized element.
+		bytes; the serialized element.
 
 		Exceptions:
 		Exception: serialization failed
 		"""
 
-		if isinstance(e, str):
+		if isinstance(e, bytes):
 			if len(e) <= 0x4b:
 				return struct.pack('B', len(e)) + e
 			elif len(e)<= 0xff:
@@ -600,14 +600,14 @@ class Transaction:
 
 			#2. hashPrevouts (32-byte hash)
 			#double SHA256 of the serialization of all input outpoints
-			signatureBody += SHA256(SHA256(''.join([
+			signatureBody += SHA256(SHA256(b''.join([
 				tx_in.previousOutputHash + struct.pack('<I', tx_in.previousOutputIndex) #uint32_t
 				for tx_in in self.tx_in
 				])))
 
 			#3. hashSequence (32-byte hash)
 			#double SHA256 of the serialization of nSequence of all inputs
-			signatureBody += SHA256(SHA256(''.join([
+			signatureBody += SHA256(SHA256(b''.join([
 				struct.pack('<I', tx_in.sequenceNumber) #uint32_t
 				for tx_in in self.tx_in
 				])))
@@ -634,7 +634,7 @@ class Transaction:
 			#8. hashOutputs (32-byte hash)
 			#double SHA256 of the serialization of all output amounts (8-byte little endian)
 			#paired up with their scriptPubKey (serialized as scripts inside CTxOuts)
-			signatureBody += SHA256(SHA256(''.join([
+			signatureBody += SHA256(SHA256(b''.join([
 				tx_out.serialize()
 				for tx_out in self.tx_out
 				])))

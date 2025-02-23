@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #    bccotg.py
-#    Copyright (C) 2015-2017 by CJP
+#    Copyright (C) 2015-2025 by CJP
 #
 #    This file is part of Bitcoin Cash Off The Grid (BCCOTG).
 #
@@ -41,7 +41,7 @@ BCC = 100000000 #Satoshi
 
 
 def readPrivateKey(filename):
-	with open(filename, "rb") as f:
+	with open(filename, "r") as f:
 		privateKey = f.read()
 	privateKey = privateKey.split("\n")[0] #first line
 	privateKey = privateKey.strip() #ignore whitespace
@@ -55,13 +55,13 @@ def getAddress(key):
 
 def getinfo(args):
 	for filename in args:
-		print "----------------"
-		print "Filename: ", filename
+		print('----------------')
+		print('Filename: ', filename)
 		privateKey = readPrivateKey(filename)
 		k = Key()
 		k.setPrivateKey(privateKey)
-		print "Public key: ", k.getPublicKey().encode("hex")
-		print "Address: ", getAddress(k)
+		print('Public key: ', k.getPublicKey().hex())
+		print('Address: ', getAddress(k))
 
 
 def spend(args):
@@ -75,42 +75,42 @@ def spend(args):
 
 	def getKey(question):
 		for i in range(len(keys)):
-			print i+1, getAddress(keys[i])
-		i = int(raw_input(question)) - 1
+			print(i+1, getAddress(keys[i]))
+		i = int(input(question)) - 1
 		return keys[i]
 
 	#Ask for input information:
 	inputs = []
 	amounts = []
 	while True:
-		txid = raw_input("Transaction ID of unspent output (Enter to stop): ")
+		txid = input('Transaction ID of unspent output (Enter to stop): ')
 		txid = txid.strip()
 		if txid == "":
 			break
 		txid = binascii.unhexlify(txid)[::-1]
 
-		vout = int(raw_input("Output index of unspent output: "))
-		k = getKey("Address of unspent output: ")
+		vout = int(input('Output index of unspent output: '))
+		k = getKey('Address of unspent output: ')
 		inputs.append((txid, vout, k))
 		amounts.append(int(decimal.Decimal(
-			raw_input("Amount in unspent output (BCC): ")
+			input('Amount in unspent output (BCC): ')
 			) * BCC))
 
 	totalAmount = sum(amounts)
-	print "Total of amounts: %s BCC" % str(decimal.Decimal(totalAmount)/BCC)
+	print('Total of amounts: %s BCC' % str(decimal.Decimal(totalAmount)/BCC))
 
 	fee = int(decimal.Decimal(
-			raw_input("Transaction fee (BCC): ")
+			input('Transaction fee (BCC): ')
 			) * BCC)
 
-	destAddress = raw_input("Destination address: ")
+	destAddress = input('Destination address: ')
 	destHash = base58.decodeBase58Check(destAddress, 0) #PUBKEY_ADDRESS = 0
 
 	destAmount = totalAmount - fee
 
-	print "Amount sent to destination: %s BCC" % str(decimal.Decimal(destAmount)/BCC)
+	print('Amount sent to destination: %s BCC' % str(decimal.Decimal(destAmount)/BCC))
 	if destAmount < 0:
-		print "Negative amount is not allowed"
+		print('Negative amount is not allowed')
 		sys.exit(2)
 
 	tx = btx.Transaction(
@@ -131,9 +131,9 @@ def spend(args):
 		scriptPubKey = btx.Script.standardPubKey(hash)
 		tx.signInput(i, scriptPubKey, [None, key.getPublicKey()], [key], amounts[i])
 
-	print "Serialized transaction:"
-	print tx.serialize().encode("hex")
-	print "Transaction ID:", tx.getTransactionID()[::-1].encode("hex")
+	print('Serialized transaction:')
+	print(tx.serialize().hex())
+	print('Transaction ID:', tx.getTransactionID()[::-1].hex())
 
 
 def decode(args):
@@ -141,23 +141,23 @@ def decode(args):
 	amounts = [int(decimal.Decimal(a)*BCC) for a in args[1:]]
 	serialized = binascii.unhexlify(s)
 	tx = btx.Transaction.deserialize(serialized)
-	print 'lockTime: ', tx.lockTime
+	print('lockTime: ', tx.lockTime)
 	for i in range(len(tx.tx_in)):
 		tx_in = tx.tx_in[i]
-		print 'TxIn:'
-		print '    amount: %s BCC' % str(decimal.Decimal(amounts[i])/BCC)
-		print '    prevOutputHash: ', tx_in.previousOutputHash.encode("hex")
-		print '    prevOutputIndex: ', tx_in.previousOutputIndex
-		print '    sequenceNumber: 0x%08x' % tx_in.sequenceNumber
-		print '    script:'
+		print('TxIn:')
+		print('    amount: %s BCC' % str(decimal.Decimal(amounts[i])/BCC))
+		print('    prevOutputHash: ', tx_in.previousOutputHash.hex())
+		print('    prevOutputIndex: ', tx_in.previousOutputIndex)
+		print('    sequenceNumber: 0x%08x' % tx_in.sequenceNumber)
+		print('    script:')
 		for e in tx_in.scriptSig.elements:
-			if isinstance(e, str):
-				s = e.encode("hex")
+			if isinstance(e, bytes):
+				s = e.hex()
 			else:
 				s = str(e)
-			print '        ', s
+			print('        ', s)
 		signature, pubKey = tx_in.scriptSig.elements
-		hashType = ord(signature[-1])
+		hashType = signature[-1]
 		signature = signature[:-1]
 
 		k = Key()
@@ -168,58 +168,58 @@ def decode(args):
 
 		sigHash = tx.getSignatureBodyHash(i, scriptPubKey, hashType, amount=amounts[i])
 
-		print '        pubKey: ', pubKey.encode('hex')
-		print '        signature: ', signature.encode('hex')
-		print '        hashType: 0x%0x' % hashType
-		print '        address: ', address
-		print '        sigHash: ', sigHash.encode('hex')
-		print '        valid: ', k.verify(sigHash, signature)
-		print ''
+		print('        pubKey: ', pubKey.hex())
+		print('        signature: ', signature.hex())
+		print('        hashType: 0x%0x' % hashType)
+		print('        address: ', address)
+		print('        sigHash: ', sigHash.hex())
+		print('        valid: ', k.verify(sigHash, signature))
+		print('')
 
 	for tx_out in tx.tx_out:
-		print 'TxOut:'
-		print '    amount: %s BCC' % str(decimal.Decimal(tx_out.amount)/BCC)
+		print('TxOut:')
+		print('    amount: %s BCC' % str(decimal.Decimal(tx_out.amount)/BCC))
 
 		elements = tx_out.scriptPubKey.elements
-		print '    script:'
+		print('    script:')
 		for e in elements:
-			if isinstance(e, str):
-				s = e.encode("hex")
+			if isinstance(e, bytes):
+				s = e.hex()
 			else:
 				s = '0x%0x' % e
-			print '        ', s
+			print('        ', s)
 
 		if len(elements) == 5 and \
 			elements[0:2] == [btx.OP.DUP, btx.OP.HASH160] and \
 			elements[3:5] == [btx.OP.EQUALVERIFY, btx.OP.CHECKSIG] and \
-			isinstance(elements[2], str):
+			isinstance(elements[2], bytes):
 
 			address = base58.encodeBase58Check(elements[2], 0) #PUBKEY_ADDRESS = 0
-			print '    Address: ', address
+			print('    Address: ', address)
 		else:
-			print '    Unrecognized script type'
+			print('    Unrecognized script type')
 
-		print ''
+		print('')
 
 	fee = sum(amounts) - sum([tx_out.amount for tx_out in tx.tx_out])
-	print 'Tx fee: %s BCC' % str(decimal.Decimal(fee)/BCC)
+	print('Tx fee: %s BCC' % str(decimal.Decimal(fee)/BCC))
 
 
 
 funcs = \
 {
-"getinfo": getinfo,
-"decode": decode,
-"spend": spend,
+'getinfo': getinfo,
+'decode': decode,
+'spend': spend,
 }
-funcNames = funcs.keys()
+funcNames = list(funcs.keys())
 funcNames.sort()
 
 if len(sys.argv) < 2 or sys.argv[1] not in funcNames:
-	print "Usage: %s <command> [<args>]" % sys.argv[0]
-	print "Command can be one of:"
+	print('Usage: %s <command> [<args>]' % sys.argv[0])
+	print('Command can be one of:')
 	for fn in funcNames:
-		print fn
+		print(fn)
 	sys.exit(1)
 
 funcs[sys.argv[1]](sys.argv[2:])

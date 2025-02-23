@@ -1,7 +1,7 @@
 #    base58.py
 #    Copyright (c) 2009-2010 Satoshi Nakamoto
 #    Copyright (c) 2009-2012 The Bitcoin Developers
-#    Copyright (C) 2013-2015 by CJP
+#    Copyright (C) 2013-2025 by CJP
 #
 #    This file is part of Bitcoin Cash Off The Grid (BCCOTG).
 #
@@ -29,7 +29,6 @@
 #    OpenSSL library used as well as that of the covered work.
 
 import binascii
-import struct
 
 from crypto import SHA256, RIPEMD160
 
@@ -43,14 +42,14 @@ def encodeBase58(data):
 	Base58-encodes the given data, without checksum or version number.
 
 	Arguments:
-	data: str; the to-be-encoded data.
+	data: bytes; the to-be-encoded data.
 
 	Return value:
 	str; the encoded data.
 	"""
 
 	# Convert big endian data to bignum
-	bignum = int('00' + data.encode("hex"), 16) #00 is necessary in case of empty string
+	bignum = int('00' + data.hex(), 16) #00 is necessary in case of empty string
 
 	ret = ""
 	while bignum > 0:
@@ -59,7 +58,7 @@ def encodeBase58(data):
 
 	# Leading zeroes encoded as base58 zeros
 	for i in range(len(data)):
-		if data[i] != '\0':
+		if data[i] != 0:
 			break
 		ret = ret + base58Chars[0]
 
@@ -77,16 +76,16 @@ def decodeBase58(data):
 	data: str; the to-be-decoded data.
 
 	Return value:
-	str; the decoded data.
+	bytes; the decoded data.
 
 	Exceptions:
 	ValueError: data contains an illegal character
 	"""
 
 	#Leading zeroes:
-	zeroes = ""
+	zeroes = b''
 	while len(data) > 0 and data[0] == base58Chars[0]:
-		zeroes += '\0'
+		zeroes += b'\0'
 		data = data[1:]
 
 	#Big endian base58 decoding:
@@ -115,7 +114,7 @@ def encodeBase58Check_noVersion(data):
 	Base58-encodes the given data, with checksum but without version number.
 
 	Arguments:
-	data: str; the to-be-encoded data.
+	data: bytes; the to-be-encoded data.
 
 	Return value:
 	str; the encoded data.
@@ -154,7 +153,7 @@ def encodeBase58Check(data, version):
 	Base58-encodes the given data, with checksum and version number.
 
 	Arguments:
-	data: str; the to-be-encoded data.
+	data: bytes; the to-be-encoded data.
 	version: int, the version number. Example values:
 	         PUBKEY_ADDRESS = 0
 	         SCRIPT_ADDRESS = 5
@@ -168,7 +167,7 @@ def encodeBase58Check(data, version):
 	"""
 
 	return encodeBase58Check_noVersion(
-		struct.pack('B', version) + data)
+		version.to_bytes(1) + data)
 
 
 def decodeBase58Check(data, version):
@@ -186,7 +185,7 @@ def decodeBase58Check(data, version):
 	         AMIKO = 23 (not used anywhere)
 
 	Return value:
-	str; the decoded data.
+	bytes; the decoded data.
 
 	Exceptions:
 	Exception: checksum failed, or version number mismatch
@@ -194,7 +193,7 @@ def decodeBase58Check(data, version):
 	"""
 
 	decoded = decodeBase58Check_noVersion(data)
-	if version != struct.unpack('B', decoded[0])[0]:
+	if version != decoded[0]:
 		raise Exception("Version mismatch")
 	return decoded[1:]
 
