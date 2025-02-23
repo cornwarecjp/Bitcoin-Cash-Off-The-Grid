@@ -112,11 +112,6 @@ def spend(args):
 	if destAmount < 0:
 		print "Negative amount is not allowed"
 		sys.exit(2)
-	'''
-	if destAmount > totalAmount - fee:
-		print "Not enough funds"
-		sys.exit(1)
-	'''
 
 	tx = btx.Transaction(
 		tx_in = [
@@ -127,22 +122,6 @@ def spend(args):
 			btx.TxOut(destAmount, btx.Script.standardPubKey(destHash))
 			]
 		)
-
-	'''
-	changeKey = getKey("Address to send change amount to: ")
-	changeAddress = getAddress(changeKey)
-	changeHash = base58.decodeBase58Check(changeAddress, 0) #PUBKEY_ADDRESS = 0
-
-	changeAmount = totalAmount - destAmount - fee
-	if changeAmount < 0:
-		raise Exception("Error: got negative change amount")
-	elif changeAmount == 0:
-		print "Note: change amount is zero - no change is sent"
-	else:
-		tx.tx_out.append(
-			btx.TxOut(changeAmount, btx.Script.standardPubKey(changeHash))
-			)
-	'''
 
 	for i in range(len(inputs)):
 		#print tx.tx_in[i].previousOutputHash.encode("hex"), tx.tx_in[i].previousOutputIndex
