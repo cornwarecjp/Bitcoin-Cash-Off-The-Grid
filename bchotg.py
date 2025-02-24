@@ -99,15 +99,19 @@ def spend(args):
 
 	destAddress = input('Destination address: ')
 	destVersion, destHash = cashaddr.decode(destAddress)
-	if destVersion != 0:
-		raise Exception('Address version = %d not supported' % destVersion)
 
 	destAmount = totalAmount - fee
-
 	print('Amount sent to destination: %s BCH' % str(decimal.Decimal(destAmount)/BCH))
 	if destAmount < 0:
 		print('Negative amount is not allowed')
 		sys.exit(2)
+
+	if destVersion == 0: #P2PKH
+		destScript = btx.Script.P2PKHPubKey(destHash)
+	elif destVersion == 8: #P2SH
+		destScript = btx.Script.P2SHPubKey(destHash)
+	else:
+		raise Exception('Address version = %d not supported' % destVersion)
 
 	tx = btx.Transaction(
 		tx_in = [
@@ -115,7 +119,7 @@ def spend(args):
 			for x in inputs
 			],
 		tx_out = [
-			btx.TxOut(destAmount, btx.Script.P2PKHPubKey(destHash))
+			btx.TxOut(destAmount, destScript)
 			]
 		)
 
@@ -188,6 +192,13 @@ def decode(args):
 			isinstance(elements[2], bytes):
 
 			address = cashaddr.encode(0, elements[2]) #P2PKH = 0
+			print('    Address: ', address)
+		elif len(elements) == 3 and \
+			elements[0] == btx.OP.HASH160 and \
+			elements[2] == btx.OP.EQUAL and \
+			isinstance(elements[1], bytes):
+
+			address = cashaddr.encode(8, elements[1]) #P2SH = 8
 			print('    Address: ', address)
 		else:
 			print('    Unrecognized script type')
