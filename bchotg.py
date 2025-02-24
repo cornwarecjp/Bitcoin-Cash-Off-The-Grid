@@ -23,6 +23,7 @@ import sys
 
 from crypto import Key, SHA256, RIPEMD160
 import base58
+import cashaddr
 import bitcointransaction as btx
 
 
@@ -38,9 +39,12 @@ def readPrivateKey(filename):
 	return base58.decodeBase58Check(privateKey, 128) #PRIVKEY = 128
 
 
-def getAddress(key):
+def getAddresses(key):
 	publicKeyHash = RIPEMD160(SHA256(key.getPublicKey()))
-	return base58.encodeBase58Check(publicKeyHash, 0) #PUBKEY_ADDRESS = 0
+	
+	BTCAddress = base58.encodeBase58Check(publicKeyHash, 0) #PUBKEY_ADDRESS = 0
+	BCHAddress = cashaddr.encode(0, publicKeyHash) #P2PKH = 0
+	return '%s (BTC); %s (BCH)' % (BTCAddress, BCHAddress)
 
 
 def getinfo(args):
@@ -51,7 +55,7 @@ def getinfo(args):
 		k = Key()
 		k.setPrivateKey(privateKey)
 		print('Public key: ', k.getPublicKey().hex())
-		print('Address: ', getAddress(k))
+		print('Addresses: ', getAddresses(k))
 
 
 def spend(args):
@@ -65,7 +69,7 @@ def spend(args):
 
 	def getKey(question):
 		for i in range(len(keys)):
-			print(i+1, getAddress(keys[i]))
+			print(i+1, getAddresses(keys[i]))
 		i = int(input(question)) - 1
 		return keys[i]
 
@@ -94,7 +98,9 @@ def spend(args):
 			) * BCH)
 
 	destAddress = input('Destination address: ')
-	destHash = base58.decodeBase58Check(destAddress, 0) #PUBKEY_ADDRESS = 0
+	destVersion, destHash = cashaddr.decode(destAddress)
+	if destVersion != 0:
+		raise Exception('Address version = %d not supported' % destVersion)
 
 	destAmount = totalAmount - fee
 
@@ -158,7 +164,7 @@ def decode(args):
 		print('        pubKey: ', pubKey.hex())
 		print('        signature: ', signature.hex())
 		print('        hashType: 0x%0x' % hashType)
-		print('        address: ', getAddress(k))
+		print('        addresses: ', getAddresses(k))
 		print('        sigHash: ', sigHash.hex())
 		print('        valid: ', k.verify(sigHash, signature))
 		print('')
@@ -181,7 +187,7 @@ def decode(args):
 			elements[3:5] == [btx.OP.EQUALVERIFY, btx.OP.CHECKSIG] and \
 			isinstance(elements[2], bytes):
 
-			address = base58.encodeBase58Check(elements[2], 0) #PUBKEY_ADDRESS = 0
+			address = cashaddr.encode(0, elements[2]) #P2PKH = 0
 			print('    Address: ', address)
 		else:
 			print('    Unrecognized script type')

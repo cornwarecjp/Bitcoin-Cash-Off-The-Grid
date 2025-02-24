@@ -80,7 +80,7 @@ It should return information like:
 	----------------
 	Filename:  <file>
 	Public key:  <hex string>
-	Address:  <Bitcoin address>
+	Address:  <Bitcoin address> (BTC); <Bitcoin Cash address> (BCH)
 
 Verify that the Bitcoin addresses in the output are as expected.
 

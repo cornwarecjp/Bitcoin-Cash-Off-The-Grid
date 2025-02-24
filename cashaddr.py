@@ -171,12 +171,3 @@ def encode(version, data):
 	values = versionAndHash + checksum
 	return ''.join(base32chars[i] for i in values)
 
-
-import sys
-address1 = sys.argv[-1]
-version, data = decode(address1)
-address2 = encode(version, data)
-print(version, data.hex())
-print(address2)
-print(address2 == address1)
-
