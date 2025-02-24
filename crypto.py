@@ -79,10 +79,6 @@ class Key:
 		self.compressed = None
 
 
-	#TODO: copy behavior
-	#TODO: comparison behavior
-
-
 	def setPublicKey(self, key):
 		"""
 		Sets a public key.
@@ -112,6 +108,9 @@ class Key:
 		Exceptions:
 		Exception: getting the key failed
 		"""
+
+		if self.pubKey is None:
+			raise Exception('Public key is not available')
 
 		return self.pubKey.serialize(compressed=self.compressed)
 
@@ -146,6 +145,9 @@ class Key:
 		Exception: getting the key failed
 		"""
 
+		if self.privKey is None:
+			raise Exception('Private key is not available')
+
 		return self.privKey.serialize()
 
 
@@ -163,6 +165,9 @@ class Key:
 		Exceptions:
 		Exception: signing failed
 		"""
+
+		if self.privKey is None:
+			raise Exception('Private key is not available')
 
 		sig = self.privKey.ecdsa_sign(data, raw=True)
 		return self.privKey.ecdsa_serialize(sig)
@@ -183,6 +188,9 @@ class Key:
 		Exceptions:
 		Exception: signature verification failed
 		"""
+
+		if self.pubKey is None:
+			raise Exception('Public key is not available')
 
 		sig = self.pubKey.ecdsa_deserialize(signature)
 		return self.pubKey.ecdsa_verify(data, sig, raw=True)
