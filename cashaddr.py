@@ -53,6 +53,25 @@ def polyMod(data):
 	return c ^ 1
 
 
+def polyModSplit(data):
+	'''
+	Calculates the PolyMod checsum over the given data, split in 5-bit chunks
+	
+	Arguments:
+	data: list of int; the data to calculate the checksum over
+	
+	Return value:
+	list of int; the checksum
+	'''
+	c = polyMod(data)
+
+	ret = []
+	for i in range(checksumLength):
+		ret.append(c & 31)
+		c >>= 5
+	return ret[::-1]
+
+
 def base32ToBytes(data):
 	'''
 	Converts from base32 integers to bytes
@@ -67,7 +86,7 @@ def base32ToBytes(data):
 	value = 0
 	for d in data:
 		value = (value << 5) | d
-	
+
 	bits = len(data)*5
 	relevantBytes = bits // 8
 	paddingBits = bits % 8
@@ -77,7 +96,33 @@ def base32ToBytes(data):
 		raise Exception('Padding bits are not zero')
 	value >>= paddingBits
 
-	return value.to_bytes(relevantBytes, 'big')
+	ret = value.to_bytes(relevantBytes, 'big')
+	return ret
+
+
+def bytesToBase32(data):
+	'''
+	Converts from bytes integers to base32
+	
+	Arguments:
+	data: bytes
+
+	Return value:
+	list of int
+	'''
+
+	value = int.from_bytes(data, 'big')
+
+	bits = len(data)*8
+	paddingBits = (-bits) % 5
+	bits += paddingBits
+	value <<= paddingBits
+
+	ret = []
+	for i in range(bits // 5):
+		ret.append(value & 31)
+		value >>= 5
+	return ret[::-1]
 
 
 def decode(address):
@@ -103,11 +148,35 @@ def decode(address):
 
 	versionAndHash = values[:-checksumLength]
 	versionAndHash = base32ToBytes(versionAndHash)
-
 	return versionAndHash[0], versionAndHash[1:]
 
 
+def encode(version, data):
+	'''
+	Encodes a Bitcoin Cash address
+
+	Arguments:
+	version: int; the version number. Example values:
+		P2KH: 0
+		P2SH: 8
+	data: bytes; the payload
+
+	Return value:
+	str; the address
+	'''
+
+	versionAndHash = version.to_bytes(1) + data
+	versionAndHash = bytesToBase32(versionAndHash)
+	checksum = polyModSplit(checksumPrefix + versionAndHash +[0]*8)
+	values = versionAndHash + checksum
+	return ''.join(base32chars[i] for i in values)
+
 
 import sys
-print(decode(sys.argv[-1]))
+address1 = sys.argv[-1]
+version, data = decode(address1)
+address2 = encode(version, data)
+print(version, data.hex())
+print(address2)
+print(address2 == address1)
 
