@@ -155,51 +155,6 @@ class Script:
 
 
 	@staticmethod
-	def multiSigPubKey(pubKeys):
-		"""
-		Creates a 2-of-N multi-signature Bitcoin scriptPubKey.
-		This is a static method: it can be called without having an instance,
-		as an alternative to calling the constructor directly.
-
-		Arguments:
-		pubKeys: sequence of bytes; the public keys
-		         2 <= len(pubKeys) <= 16
-
-		Return value:
-		Script; a scriptPubKey for sending funds to a 2-of-N multi-signature
-		output.
-
-		Exceptions:
-		Exception: construction failed (e.g. too many / too few public keys given)
-		"""
-
-		N = len(pubKeys)
-		if N > 16:
-			raise Exception("Mult-sig with more than 16 public keys is not supported")
-		if N < 2:
-			raise Exception("Mult-sig with less than two keys is not supported")
-		OP_N = OP.TWO + (N-2)
-
-		return Script([OP.TWO] + pubKeys + [OP_N, OP.CHECKMULTISIG])
-
-
-	@staticmethod
-	def dataPubKey(data):
-		"""
-		Creates a data publishing scriptPubKey.
-		This is a static method: it can be called without having an instance,
-		as an alternative to calling the constructor directly.
-
-		Arguments:
-		data: bytes; the data to be included in the scriptPubKey (max. 40 bytes)
-
-		Return value:
-		Script; a scriptPubKey for including data in a transaction.
-		"""
-		return Script((OP.RETURN, data))
-
-
-	@staticmethod
 	def deserialize(data):
 		"""
 		De-serializes a Bitcoin script.
