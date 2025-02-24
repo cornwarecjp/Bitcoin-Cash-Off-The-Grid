@@ -44,7 +44,7 @@ def packVarInt(i):
 	i: int; the to-be-encoded integer value (range 0 .. 2**64-1)
 
 	Return value:
-	str; the variable-length encoded value
+	bytes; the variable-length encoded value
 
 	Exceptions:
 	struct.error: integer out of range
@@ -65,7 +65,7 @@ def unpackVarInt(data):
 	Bitcoin variable length integer decoding
 
 	Arguments:
-	str; the variable-length encoded value
+	bytes; the variable-length encoded value
 
 	Return value:
 	i: int; the decoded integer value
@@ -156,7 +156,7 @@ class Script:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		pubKeys: sequence of str; the public keys
+		pubKeys: sequence of bytes; the public keys
 		         2 <= len(pubKeys) <= 16
 
 		Return value:
@@ -185,7 +185,7 @@ class Script:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		data: str; the data to be included in the scriptPubKey (max. 40 bytes)
+		data: bytes; the data to be included in the scriptPubKey (max. 40 bytes)
 
 		Return value:
 		Script; a scriptPubKey for including data in a transaction.
@@ -201,7 +201,7 @@ class Script:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		data: str; the serialized script
+		data: bytes; the serialized script
 
 		Return value:
 		Script; the de-serialized script
@@ -237,7 +237,7 @@ class Script:
 		Constructor.
 
 		Arguments:
-		elements: list or tuple of str and int; the elements are the
+		elements: list or tuple of bytes and int; the elements are the
 			      op-codes (int) and data items (str) that form the script.
 		"""
 		self.elements = elements
@@ -248,7 +248,7 @@ class Script:
 		Serializes the script.
 
 		Return value:
-		str; the serialized script
+		bytes; the serialized script
 
 		Exceptions:
 		Exception: serialization failed
@@ -307,7 +307,7 @@ class TxIn:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		data: str; the serialized transaction input.
+		data: bytes; the serialized transaction input.
 		      May contain trailing bytes that are not part of the serialized
 		      transaction input.
 
@@ -343,7 +343,7 @@ class TxIn:
 		Constructor.
 
 		Arguments:
-		outputHash: str; the transaction ID of the previous output transaction
+		outputHash: bytes; the transaction ID of the previous output transaction
 		outputIndex: int; the index of the output in the previous output transaction
 		"""
 		self.previousOutputHash = outputHash
@@ -357,7 +357,7 @@ class TxIn:
 		Serializes the transaction input.
 
 		Return value:
-		str; the serialized transaction input
+		bytes; the serialized transaction input
 		"""
 
 		ret = self.previousOutputHash
@@ -388,7 +388,7 @@ class TxOut:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		data: str; the serialized transaction output.
+		data: bytes; the serialized transaction output.
 		      May contain trailing bytes that are not part of the serialized
 		      transaction output.
 
@@ -429,7 +429,7 @@ class TxOut:
 		Serializes the transaction output.
 
 		Return value:
-		str; the serialized transaction output
+		bytes; the serialized transaction output
 		"""
 
 		ret = struct.pack('<Q', self.amount) #uint64_t
@@ -459,7 +459,7 @@ class Transaction:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		data: str; the serialized transaction.
+		data: bytes; the serialized transaction.
 
 		Return value:
 		Transaction; the de-serialized transaction
@@ -523,7 +523,7 @@ class Transaction:
 		Serializes the transaction.
 
 		Return value:
-		str; the serialized transaction
+		bytes; the serialized transaction
 		"""
 
 		ret = struct.pack('<I', self.version) #version, uint32_t
@@ -552,7 +552,7 @@ class Transaction:
 		amount: int; the amount of the transaction input (default: None)
 
 		Return value:
-		str; the double-SHA256-hashed, masked, serialized transaction:
+		bytes; the double-SHA256-hashed, masked, serialized transaction:
 		this is the data that must be signed in OP_CHECKSIG (and similar)
 		signatures.
 		"""
@@ -662,10 +662,10 @@ class Transaction:
 		Arguments:
 		index: int; the index of the transaction input to which the signatures
 		       apply
-		scriptSigTemplate: list of str, int and None: a template of the scriptSig
+		scriptSigTemplate: list of bytes, int and None: a template of the scriptSig
 		                   elements. Each occurrence of None will be replaced by
 		                   a signature.
-		signatures: list of str; the signatures. The number of signatures must
+		signatures: list of bytes; the signatures. The number of signatures must
 		            be at least the number of occurrences of None in scriptSigTemplate.
 		"""
 
@@ -686,7 +686,7 @@ class Transaction:
 		       apply
 		scriptPubKey: Script; the scriptPubKey of the output to which the
 		              signature applies
-		scriptSigTemplate: list of str, int and None: a template of the scriptSig
+		scriptSigTemplate: list of bytes, int and None: a template of the scriptSig
 		                   elements. Each occurrence of None will be replaced by
 		                   a signature.
 		privateKeys: list of Key; the private keys. The number of keys must be
@@ -719,7 +719,7 @@ class Transaction:
 		Returns the transaction ID.
 
 		Return value:
-		str; the transaction ID. Note that the byte order is the reverse as
+		bytes; the transaction ID. Note that the byte order is the reverse as
 		shown in Bitcoin.
 		"""
 		return SHA256(SHA256(self.serialize())) #Note: in Bitcoin, the tx hash is shown reversed!
