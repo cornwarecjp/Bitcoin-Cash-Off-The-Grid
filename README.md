@@ -1,4 +1,4 @@
-Bitcoin Cash Off The Grid (BCCOTG)
+Bitcoin Cash Off The Grid (BCHOTG)
 ==================================
 
 Low-level tool for creating Bitcoin Cash transactions.
@@ -41,8 +41,8 @@ to some Bitcoin Cash funds. This can, for instance, be
 
 In the first case you could, as a precaution, first ensure the safety of the
 Bitcoin funds on your addresses by moving the Bitcoin funds somewhere else,
-before using BCCOTG. This is only a precaution, since I believe this is not
-necessary, because BCCOTG only makes Bitcoin Cash transactions, which are
+before using BCHOTG. This is only a precaution, since I believe this is not
+necessary, because BCHOTG only makes Bitcoin Cash transactions, which are
 invalid on the Bitcoin network.
 
 In ANY case, it is a good precaution to make a good back-up of your wallets
@@ -51,7 +51,7 @@ BEFORE you perform potentially risky operations.
 Now, you need to identify the addresses that contain unspent Bitcoin Cash.
 You can check this on a Bitcoin Cash block explorer, for instance on
 http://blockdozer.com
-Unfortunately, BCCOTG only supports regular Bitcoin addresses: there is no
+Unfortunately, BCHOTG only supports regular Bitcoin addresses: there is no
 support for P2SH, multi-sig or alternative script types.
 
 Next, you need to obtain the private keys of any of these unspent outputs you
@@ -60,7 +60,7 @@ Core, for instance, you can go to "Debug window"->"Console", and use the command
 
 	dumpprivkey <address>
 
-BCCOTG requires the Wallet Import Format; typically, private keys in this format
+BCHOTG requires the Wallet Import Format; typically, private keys in this format
 start with a 5, an L or a K.
 
 You should store each private key in a separate file. The file should be a text
@@ -69,7 +69,7 @@ could use the corresponding Bitcoin address as filename.
 
 Step 2: check the private keys
 ------------------------------
-In a commandline window, go to the directory that contains BCCOTG, and give
+In a commandline window, go to the directory that contains BCHOTG, and give
 the command
 
 	./bccotg.py getinfo <file1> [<file2> [..]]
@@ -95,7 +95,7 @@ For each unspent transaction output, collect the following information:
  * The transaction ID of the transaction that sent funds to your address
  * The output index, of that transaction, that sent funds to your address.
    The first output has index 0, the second output has index 1, and so on.
- * The exact(!) amount of BCC that was sent to that output by the transaction.
+ * The exact(!) amount of BCH that was sent to that output by the transaction.
 
 Note: they should be UNSPENT outputs! Trying to spend an output that is already
 spent by another transaction results in a double-spend; if you do that, your
@@ -103,14 +103,14 @@ transaction will be ignored by Bitcoin Cash.
 
 Step 4: construct your transaction
 ----------------------------------
-In a commandline window, go to the directory that contains BCCOTG, and give
+In a commandline window, go to the directory that contains BCHOTG, and give
 the command
 
 	./bccotg.py spend <file1> [<file2> [..]]
 
 where the files containing the private keys are given as commandline arguments.
 
-BCCOTG will ask for further information. First, the unspent transaction outputs:
+BCHOTG will ask for further information. First, the unspent transaction outputs:
 
 	Transaction ID of unspent output (Enter to stop): <txid>
 	Output index of unspent output: <index>
@@ -118,36 +118,36 @@ BCCOTG will ask for further information. First, the unspent transaction outputs:
 	2 <address2>
 	...
 	Address of unspent output: <choose a number from the above items>
-	Amount in unspent output (BCC): <amount in the UTXO>
+	Amount in unspent output (BCH): <amount in the UTXO>
 
 Continue with this for all UTXOs you wish to spend, and then press Enter to stop.
-BCCOTG will then show the sum of all UTXO amounts you entered. Check this:
+BCHOTG will then show the sum of all UTXO amounts you entered. Check this:
 
-	Total of amounts: <amount> BCC
+	Total of amounts: <amount> BCH
 
-Next, BCCOTG asks for the transaction fee:
+Next, BCHOTG asks for the transaction fee:
 
-	Transaction fee (BCC): <fee>
+	Transaction fee (BCH): <fee>
 
-BE CAREFUL: BCCOTG does NOT CHECK the sanity of this value! Any funds used as
+BE CAREFUL: BCHOTG does NOT CHECK the sanity of this value! Any funds used as
 transaction fee will be LOST (to you). You can easily lose a large part of your
 funds by choosing a too high transaction fee.
 
-Next, BCCOTG asks for the destination address:
+Next, BCHOTG asks for the destination address:
 
 	Destination address: <address>
 
-Next, BCCOTG reports the amount sent to the destination address, by subtracting
+Next, BCHOTG reports the amount sent to the destination address, by subtracting
 the fee from the total of the input amounts:
 
-	Amount sent to destination: <amount> BCC
+	Amount sent to destination: <amount> BCH
 
 Check this value.
 
-Note: BCCOTG does NOT send any funds to a change address: all input funds are
+Note: BCHOTG does NOT send any funds to a change address: all input funds are
 used either for transaction fee, or sent to the destination address.
 
-Finally, BCCOTG returns the raw transaction data, and the transaction ID:
+Finally, BCHOTG returns the raw transaction data, and the transaction ID:
 
 	Serialized transaction:
 	<raw transaction data>
@@ -161,7 +161,7 @@ fee you entered earlier.
 Step 5: check the transaction
 -----------------------------
 
-In a commandline window, go to the directory that contains BCCOTG, and give
+In a commandline window, go to the directory that contains BCHOTG, and give
 the command
 
 	./bccotg.py decode <raw transaction data> <amount1> [<amount2> [..]]
@@ -169,7 +169,7 @@ the command
 Use the raw transaction data from step 4. The amounts should be the amounts of
 the unspent transaction outputs, in the order they were specified in step 4.
 
-Check the information returned by BCCOTG, especially the amounts and addresses.
+Check the information returned by BCHOTG, especially the amounts and addresses.
 
 Step 6: broadcast the transaction
 ---------------------------------

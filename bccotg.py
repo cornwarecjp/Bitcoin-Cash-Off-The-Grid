@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-#    bccotg.py
+#    bchotg.py
 #    Copyright (C) 2015-2025 by CJP
 #
-#    This file is part of Bitcoin Cash Off The Grid (BCCOTG).
+#    This file is part of Bitcoin Cash Off The Grid (BCHOTG).
 #
-#    BCCOTG is free software: you can redistribute it and/or modify
+#    BCHOTG is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
 #    the Free Software Foundation, either version 3 of the License, or
 #    (at your option) any later version.
 #
-#    BCCOTG is distributed in the hope that it will be useful,
+#    BCHOTG is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU General Public License for more details.
 #
 #    You should have received a copy of the GNU General Public License
-#    along with BCCOTG. If not, see <http://www.gnu.org/licenses/>.
+#    along with BCHOTG. If not, see <http://www.gnu.org/licenses/>.
 #
 #    Additional permission under GNU GPL version 3 section 7
 #
@@ -37,7 +37,7 @@ import bitcointransaction as btx
 
 
 
-BCC = 100000000 #Satoshi
+BCH = 100000000 #Satoshi
 
 
 def readPrivateKey(filename):
@@ -93,22 +93,22 @@ def spend(args):
 		k = getKey('Address of unspent output: ')
 		inputs.append((txid, vout, k))
 		amounts.append(int(decimal.Decimal(
-			input('Amount in unspent output (BCC): ')
-			) * BCC))
+			input('Amount in unspent output (BCH): ')
+			) * BCH))
 
 	totalAmount = sum(amounts)
-	print('Total of amounts: %s BCC' % str(decimal.Decimal(totalAmount)/BCC))
+	print('Total of amounts: %s BCH' % str(decimal.Decimal(totalAmount)/BCH))
 
 	fee = int(decimal.Decimal(
-			input('Transaction fee (BCC): ')
-			) * BCC)
+			input('Transaction fee (BCH): ')
+			) * BCH)
 
 	destAddress = input('Destination address: ')
 	destHash = base58.decodeBase58Check(destAddress, 0) #PUBKEY_ADDRESS = 0
 
 	destAmount = totalAmount - fee
 
-	print('Amount sent to destination: %s BCC' % str(decimal.Decimal(destAmount)/BCC))
+	print('Amount sent to destination: %s BCH' % str(decimal.Decimal(destAmount)/BCH))
 	if destAmount < 0:
 		print('Negative amount is not allowed')
 		sys.exit(2)
@@ -138,14 +138,14 @@ def spend(args):
 
 def decode(args):
 	s = args[0]
-	amounts = [int(decimal.Decimal(a)*BCC) for a in args[1:]]
+	amounts = [int(decimal.Decimal(a)*BCH) for a in args[1:]]
 	serialized = binascii.unhexlify(s)
 	tx = btx.Transaction.deserialize(serialized)
 	print('lockTime: ', tx.lockTime)
 	for i in range(len(tx.tx_in)):
 		tx_in = tx.tx_in[i]
 		print('TxIn:')
-		print('    amount: %s BCC' % str(decimal.Decimal(amounts[i])/BCC))
+		print('    amount: %s BCH' % str(decimal.Decimal(amounts[i])/BCH))
 		print('    prevOutputHash: ', tx_in.previousOutputHash.hex())
 		print('    prevOutputIndex: ', tx_in.previousOutputIndex)
 		print('    sequenceNumber: 0x%08x' % tx_in.sequenceNumber)
@@ -178,7 +178,7 @@ def decode(args):
 
 	for tx_out in tx.tx_out:
 		print('TxOut:')
-		print('    amount: %s BCC' % str(decimal.Decimal(tx_out.amount)/BCC))
+		print('    amount: %s BCH' % str(decimal.Decimal(tx_out.amount)/BCH))
 
 		elements = tx_out.scriptPubKey.elements
 		print('    script:')
@@ -202,7 +202,7 @@ def decode(args):
 		print('')
 
 	fee = sum(amounts) - sum([tx_out.amount for tx_out in tx.tx_out])
-	print('Tx fee: %s BCC' % str(decimal.Decimal(fee)/BCC))
+	print('Tx fee: %s BCH' % str(decimal.Decimal(fee)/BCH))
 
 
 
