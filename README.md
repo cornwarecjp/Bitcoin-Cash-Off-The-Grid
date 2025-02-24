@@ -177,7 +177,10 @@ Step 6: broadcast the transaction
 
 Find a place to broadcast Bitcoin Cash transactions. This can be done, for
 instance, on
+
 https://blockchair.com/broadcast
+https://www.viabtc.com/tools/broadcast?symbol=BCH
+https://bch.info/en/tools/broadcast
 
 Enter the raw transaction data from step 4. Check that the transaction is
 accepted. Check the confirmation status of the transaction using a Bitcoin
