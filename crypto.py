@@ -119,6 +119,11 @@ class Key:
 		"""
 
 		self.compressed = len(key) == 33
+
+		if self.compressed:
+			if key[-1] != 1:
+				raise Exception('Unexpected flag value %d in compressed private key' % key[-1])
+			key = key[:-1]
 		self.privKey = secp256k1.PrivateKey(key, raw=True)
 		self.pubKey = self.privKey.pubkey
 
