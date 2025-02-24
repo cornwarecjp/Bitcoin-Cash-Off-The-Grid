@@ -139,6 +139,22 @@ class Script:
 
 
 	@staticmethod
+	def P2SHPubKey(scriptHash):
+		"""
+		Creates a P2SH scriptPubKey.
+		This is a static method: it can be called without having an instance,
+		as an alternative to calling the constructor directly.
+
+		Arguments:
+		scriptHash: bytes; the SHA256- and RIPEMD160-hashed script
+
+		Return value:
+		Script; a scriptPubKey for sending funds to a P2SH output.
+		"""
+		return Script((OP.HASH160, scriptHash, OP.EQUAL))
+
+
+	@staticmethod
 	def multiSigPubKey(pubKeys):
 		"""
 		Creates a 2-of-N multi-signature Bitcoin scriptPubKey.
