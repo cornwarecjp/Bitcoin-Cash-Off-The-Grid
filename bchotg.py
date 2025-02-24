@@ -114,11 +114,9 @@ def spend(args):
 		)
 
 	for i in range(len(inputs)):
-		#print tx.tx_in[i].previousOutputHash.encode("hex"), tx.tx_in[i].previousOutputIndex
 		key = inputs[i][2]
-		address = getAddress(key)
-		hash = base58.decodeBase58Check(address, 0) #PUBKEY_ADDRESS = 0
-		scriptPubKey = btx.Script.standardPubKey(hash)
+		publicKeyHash = RIPEMD160(SHA256(key.getPublicKey()))
+		scriptPubKey = btx.Script.standardPubKey(publicKeyHash)
 		tx.signInput(i, scriptPubKey, [None, key.getPublicKey()], [key], amounts[i])
 
 	print('Serialized transaction:')
@@ -152,16 +150,15 @@ def decode(args):
 
 		k = Key()
 		k.setPublicKey(pubKey)
-		address = getAddress(k)
-		hash = base58.decodeBase58Check(address, 0) #PUBKEY_ADDRESS = 0
-		scriptPubKey = btx.Script.standardPubKey(hash)
+		publicKeyHash = RIPEMD160(SHA256(pubKey))
+		scriptPubKey = btx.Script.standardPubKey(publicKeyHash)
 
 		sigHash = tx.getSignatureBodyHash(i, scriptPubKey, hashType, amount=amounts[i])
 
 		print('        pubKey: ', pubKey.hex())
 		print('        signature: ', signature.hex())
 		print('        hashType: 0x%0x' % hashType)
-		print('        address: ', address)
+		print('        address: ', getAddress(k))
 		print('        sigHash: ', sigHash.hex())
 		print('        valid: ', k.verify(sigHash, signature))
 		print('')
