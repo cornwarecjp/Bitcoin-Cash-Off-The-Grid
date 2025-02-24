@@ -115,14 +115,14 @@ def spend(args):
 			for x in inputs
 			],
 		tx_out = [
-			btx.TxOut(destAmount, btx.Script.standardPubKey(destHash))
+			btx.TxOut(destAmount, btx.Script.P2PKHPubKey(destHash))
 			]
 		)
 
 	for i in range(len(inputs)):
 		key = inputs[i][2]
 		publicKeyHash = RIPEMD160(SHA256(key.getPublicKey()))
-		scriptPubKey = btx.Script.standardPubKey(publicKeyHash)
+		scriptPubKey = btx.Script.P2PKHPubKey(publicKeyHash)
 		tx.signInput(i, scriptPubKey, [None, key.getPublicKey()], [key], amounts[i])
 
 	print('Serialized transaction:')
@@ -157,7 +157,7 @@ def decode(args):
 		k = Key()
 		k.setPublicKey(pubKey)
 		publicKeyHash = RIPEMD160(SHA256(pubKey))
-		scriptPubKey = btx.Script.standardPubKey(publicKeyHash)
+		scriptPubKey = btx.Script.P2PKHPubKey(publicKeyHash)
 
 		sigHash = tx.getSignatureBodyHash(i, scriptPubKey, hashType, amount=amounts[i])
 

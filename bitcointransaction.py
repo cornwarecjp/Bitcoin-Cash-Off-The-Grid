@@ -121,19 +121,17 @@ class Script:
 	"""
 
 	@staticmethod
-	def standardPubKey(pubKeyHash):
+	def P2PKHPubKey(pubKeyHash):
 		"""
-		Creates a standard Bitcoin scriptPubKey ("send to Bitcoin address").
+		Creates a P2PKH scriptPubKey.
 		This is a static method: it can be called without having an instance,
 		as an alternative to calling the constructor directly.
 
 		Arguments:
 		pubKeyHash: bytes; the SHA256- and RIPEMD160-hashed public key
-		            (equivalent to the bitcoin address)
 
 		Return value:
-		Script; a scriptPubKey for sending funds to a standard Bitcoin address
-		output.
+		Script; a scriptPubKey for sending funds to a P2PKH output.
 		"""
 		return Script((OP.DUP, OP.HASH160, pubKeyHash, OP.EQUALVERIFY, OP.CHECKSIG))
 
