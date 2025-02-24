@@ -88,7 +88,8 @@ Step 3: collect transaction output information
 ----------------------------------------------
 You should find out where your funds are in the (Bitcoin Cash) blockchain.
 This can be done with an online block explorer, for instance on
-http://blockdozer.com
+
+https://blockchair.com/bitcoin-cash
 
 For each unspent transaction output, collect the following information:
 
@@ -176,7 +177,7 @@ Step 6: broadcast the transaction
 
 Find a place to broadcast Bitcoin Cash transactions. This can be done, for
 instance, on
-http://blockdozer.com/insight/tx/send
+https://blockchair.com/broadcast
 
 Enter the raw transaction data from step 4. Check that the transaction is
 accepted. Check the confirmation status of the transaction using a Bitcoin
