@@ -30,7 +30,7 @@
 
 import binascii
 
-from crypto import SHA256, RIPEMD160
+from crypto import SHA256
 
 
 
