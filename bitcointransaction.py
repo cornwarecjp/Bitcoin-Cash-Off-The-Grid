@@ -116,8 +116,8 @@ class Script:
 	A Bitcoin script.
 
 	Attributes:
-	elements: list or tuple of str and int; the elements are the
-	          op-codes (int) and data items (str) that form the script.
+	elements: list or tuple of bytes and int; the elements are the
+	          op-codes (int) and data items (bytes) that form the script.
 	"""
 
 	@staticmethod
@@ -128,7 +128,7 @@ class Script:
 		as an alternative to calling the constructor directly.
 
 		Arguments:
-		pubKeyHash: str; the SHA256- and RIPEMD160-hashed public key
+		pubKeyHash: bytes; the SHA256- and RIPEMD160-hashed public key
 		            (equivalent to the bitcoin address)
 
 		Return value:
