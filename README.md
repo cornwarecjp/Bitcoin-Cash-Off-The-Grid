@@ -50,7 +50,7 @@ BEFORE you perform potentially risky operations.
 
 Now, you need to identify the addresses that contain unspent Bitcoin Cash.
 You can check this on a Bitcoin Cash block explorer, for instance on
-http://blockdozer.com
+https://blockchair.com/bitcoin-cash
 Unfortunately, BCHOTG only supports regular Bitcoin addresses: there is no
 support for P2SH, multi-sig or alternative script types.
 
