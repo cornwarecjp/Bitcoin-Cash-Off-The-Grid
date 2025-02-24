@@ -72,7 +72,7 @@ Step 2: check the private keys
 In a commandline window, go to the directory that contains BCHOTG, and give
 the command
 
-	./bccotg.py getinfo <file1> [<file2> [..]]
+	./bchotg.py getinfo <file1> [<file2> [..]]
 
 where the files containing the private keys are given as commandline arguments.
 It should return information like:
@@ -106,7 +106,7 @@ Step 4: construct your transaction
 In a commandline window, go to the directory that contains BCHOTG, and give
 the command
 
-	./bccotg.py spend <file1> [<file2> [..]]
+	./bchotg.py spend <file1> [<file2> [..]]
 
 where the files containing the private keys are given as commandline arguments.
 
@@ -164,7 +164,7 @@ Step 5: check the transaction
 In a commandline window, go to the directory that contains BCHOTG, and give
 the command
 
-	./bccotg.py decode <raw transaction data> <amount1> [<amount2> [..]]
+	./bchotg.py decode <raw transaction data> <amount1> [<amount2> [..]]
 
 Use the raw transaction data from step 4. The amounts should be the amounts of
 the unspent transaction outputs, in the order they were specified in step 4.
